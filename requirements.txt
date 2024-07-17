@@ -1,0 +1,5 @@
+Django
+satella
+ldap3
+waitress
+docutils

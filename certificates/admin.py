@@ -21,9 +21,9 @@ class SignatureDatabaseAdmin(admin.TabularInline):
 
 class CertificateAdmin(admin.ModelAdmin):
     actions = ['generate_new']
-    readonly_fields = ['serial', 'signed_by']
+    readonly_fields = ['serial', 'signed_by', 'extra_data']
     fields = ['public_key', 'private_key', 'is_used_for_client_auth', 'is_ca', 'can_sign',
-              'common_name', 'signed_by', 'serial']
+              'common_name', 'signed_by', 'serial', 'extra_data']
     list_display = ['common_name', 'serial', 'can_sign']
     inlines = [SignatureDatabaseAdmin]
 

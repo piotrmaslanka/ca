@@ -16,6 +16,7 @@ class Certificate(models.Model):
     # if following is null, that means it's self-signed
     signed_by = models.ForeignKey('certificates.Certificate', on_delete=models.RESTRICT, null=True, blank=True)
     serial = models.CharField(max_length=16)
+    extra_data = models.TextField(default='{}', verbose_name='Extra data')
 
     class Meta:
         unique_together = ('serial', 'signed_by')

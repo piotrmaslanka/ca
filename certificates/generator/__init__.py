@@ -1,4 +1,5 @@
 import os
+import json
 import sys
 import subprocess
 from datetime import datetime
@@ -62,7 +63,8 @@ def new_certificate(signed_by: Certificate, key_size: int = 4096, days=365, coun
 
     cert = Certificate(public_key=read_in_file(cert_path, encoding='utf-8'),
                        private_key=read_in_file(os.path.join(base_path, 'cert.key'), encoding='utf-8'),
-                       signed_by=signed_by, serial=sign.next_serial.rjust(16, '0'), common_name=subject_dn)
+                       signed_by=signed_by, serial=sign.next_serial.rjust(16, '0'), common_name=subject_dn,
+                       extra_data=json.dumps(kwargs))
     cert.save()
     prev_serial = sign.next_serial
     sign.next_serial = get_current_serial(sign)

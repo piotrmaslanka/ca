@@ -1,7 +1,9 @@
-smok-ca
-=======
+ca
+==
 
-The certificate authority for SMOK.
+The certificate authority Web interface.
+
+Basically a Web interface to openssl genrsa, req and ca.
 
 You:
 

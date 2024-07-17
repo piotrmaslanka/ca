@@ -125,11 +125,11 @@ STATIC_ROOT = BASE_DIR / "static"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # LDAP configuration
-LDAP_HOST = os.environ['LDAP_HOST']
+LDAP_HOST = os.environ.get('LDAP_HOST')
 
-LDAP_USERNAME = os.environ['LDAP_USER']
-LDAP_PASSWORD = os.environ['LDAP_PASSWORD']
+LDAP_USERNAME = os.environ.get('LDAP_USER')
+LDAP_PASSWORD = os.environ.get('LDAP_PASSWORD')
 
-LDAP_USER_BUILD = os.environ['LDAP_USER_BUILD']
-LDAP_GROUP = os.environ['LDAP_GROUP']
+LDAP_USER_BUILD = os.environ.get('LDAP_USER_BUILD')
+LDAP_GROUP = os.environ.get('LDAP_GROUP')
 AUTHENTICATION_BACKENDS = ["smokca.ldap_auth.LDAPAuthentication", ]

@@ -4,10 +4,16 @@ from django import forms
 from django.shortcuts import redirect, render
 from .models import Certificate
 from signing.models import Signing
+from signing.models import SignatureDatabase
 
+
+class SignatureDatabaseAdmin(admin.StackedInline):
+    model = SignatureDatabase
 
 class CertificateAdmin(admin.ModelAdmin):
     actions = ['generate_new']
+    list_display = ['common_name', 'serial', 'can_sign']
+    inlines = [SignatureDatabaseAdmin]
 
     @admin.action
     def generate_new(modeladmin, request, queryset):
@@ -18,3 +24,4 @@ class CertificateAdmin(admin.ModelAdmin):
         return redirect(f'/admin/certificates/generate/{cert.id}/')
 
 admin.site.register(Certificate, CertificateAdmin)
+

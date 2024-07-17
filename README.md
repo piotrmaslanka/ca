@@ -15,3 +15,8 @@ This software enables you to:
 * issue new certificates with custom fields (as in custom OID).
 
 It also stores all of the private keys, and supports only "I'll generate you a private key" mode.
+
+How do I generate a new certificate?
+------------------------------------
+
+Navigate to Certificates tab, click the box near your certificate and select *Generate new* from the action bar.

@@ -19,7 +19,7 @@ class LDAPAuthentication(BaseBackend):
             return set()
         result = set()
         for p_type, p_model in itertools.product(['change', 'view', 'add', 'delete'],
-                                                 ['user', 'contenttype', 'session', 'certificate']):
+                                                 ['contenttype', 'session', 'certificate']):
             result.add(f'{p_type}_{p_model}')
         return result
 
@@ -27,6 +27,8 @@ class LDAPAuthentication(BaseBackend):
         return self.get_user_permissions(user_obj, obj=obj)
 
     def has_perm(self, user_obj, perm, obj=None):
+        if 'group' in perm:
+            return False
         if user_obj.is_anonymous or not user_obj.is_active:
             return False
         return True

@@ -38,7 +38,12 @@ class SignatureDatabase(models.Model):
     revocation = models.CharField(max_length=20, default='', blank=True)
     serial = models.CharField(max_length=16)
     subject_dn = models.CharField(max_length=255)
-    certificate = models.ForeignKey('certificates.Certificate', on_delete=models.CASCADE)
+    certificate = models.ForeignKey('certificates.Certificate', on_delete=models.CASCADE,
+                                    verbose_name='Certificate that was issued as a result of this',
+                                    related_name='certificates')
+    signed_by = models.ForeignKey('certificates.Certificate', on_delete=models.CASCADE,
+                                  verbose_name='Certificate that has signed this one', null=True,
+                                  related_name='signers')
 
     def __str__(self):
         return f'{self.subject_dn}'

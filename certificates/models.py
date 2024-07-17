@@ -20,6 +20,10 @@ class Certificate(models.Model):
     class Meta:
         unique_together = ('serial', 'signed_by')
 
+    def logs(self):
+        from signing.models import SignatureDatabase
+        return SignatureDatabase.objects.filter(certificate=self)
+
     def __str__(self) -> str:
         return self.common_name
 

@@ -70,7 +70,7 @@ def new_certificate(signed_by: Certificate, key_size: int = 4096, days=365, coun
 
 
     db_entry = SignatureDatabase(signing=sign, status='V', expiration=expiration, serial=prev_serial,
-                                 subject_dn=subject_dn, certificate=cert)
+                                 subject_dn=subject_dn, certificate=cert, signed_by=signed_by)
     db_entry.save()
 
     return cert

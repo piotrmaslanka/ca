@@ -9,8 +9,6 @@ def redirect_to_admin(request):
     return redirect('/admin/')
 
 
-admin.site.index_title = "SMOK CA certificate repository"
-
 urlpatterns = [
     path('admin/certificates/generate/<int:certificate_id>/', views.generate_new),
     path('admin/doc/', include('django.contrib.admindocs.urls')),

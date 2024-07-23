@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("certificates", "0010_certificate_can_sign_alter_certificate_is_ca"),
     ]

@@ -1,23 +1,24 @@
 from django.contrib import admin, messages
-from django.views.generic.detail import DetailView
-from django import forms
-from django.shortcuts import redirect, render
-from .models import Certificate
-from signing.models import Signing, SignatureDatabase
+from django.shortcuts import redirect
 
+from signing.models import SignatureDatabase
+from .models import Certificate
 
 admin.site.site_title = "CA: Certificate Authority"
 admin.site.site_header = 'CA: Certificate Authority'
 admin.site.index_title = 'CA: Certificate Authority'
 
+
 class SignatureDatabaseAdmin(admin.TabularInline):
     model = SignatureDatabase
-    readonly_fields = ('expiration', 'serial', 'subject_dn', 'certificate', 'signing', 'status', 'revocation', 'signed_by')
+    readonly_fields = (
+    'expiration', 'serial', 'subject_dn', 'certificate', 'signing', 'status', 'revocation', 'signed_by')
     fields = ('expiration', 'serial', 'subject_dn', 'certificate')
     extra = 0
     can_delete = False
     fk_name = 'signed_by'
     verbose_name = 'Database of signatures'
+
 
 class CertificateAdmin(admin.ModelAdmin):
     actions = ['generate_new']
@@ -37,4 +38,3 @@ class CertificateAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Certificate, CertificateAdmin)
-

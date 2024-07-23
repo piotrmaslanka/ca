@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("certificates", "0006_certificate_is_used_for_client_auth_and_more"),
     ]

@@ -31,6 +31,7 @@ STATUS = [
     ('E', 'expired')
 ]
 
+
 class SignatureDatabase(models.Model):
     signing = models.ForeignKey(Signing, on_delete=models.CASCADE)
     status = models.CharField(choices=STATUS, max_length=1)

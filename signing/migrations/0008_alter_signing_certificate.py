@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("certificates", "0011_alter_certificate_unique_together"),
         ("signing", "0007_alter_signingfield_oid"),

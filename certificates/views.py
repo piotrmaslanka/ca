@@ -1,12 +1,13 @@
-from django.contrib import messages
 from django import forms
+from django.contrib import messages
+from django.contrib.admin.models import LogEntry
+from django.contrib.auth.decorators import login_required
+from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import render, redirect
-from .models import Certificate
+
 from signing.models import Signing
 from .generator import new_certificate
-from django.contrib.auth.decorators import login_required
-from django.contrib.admin.models import LogEntry
-from django.contrib.contenttypes.models import ContentType
+from .models import Certificate
 
 
 @login_required()
@@ -40,8 +41,8 @@ def generate_new(request, certificate_id: int):
                 kwargs[field.name.lower()] = form.cleaned_data[field.name.lower()]
 
             new_cert = new_certificate(cert, request.user, country=form.cleaned_data['c'],
-                            organisation=form.cleaned_data['o'], org_unit=form.cleaned_data['ou'],
-                            common_name=form.cleaned_data['cn'], **kwargs)
+                                       organisation=form.cleaned_data['o'], org_unit=form.cleaned_data['ou'],
+                                       common_name=form.cleaned_data['cn'], **kwargs)
             messages.add_message(request, messages.SUCCESS, 'New certificate issued')
             le = LogEntry(user=request.user,
                           content_type=ContentType.objects.get(app_label='certificates', model='certificate'),
@@ -56,4 +57,3 @@ def generate_new(request, certificate_id: int):
 
     return render(request, 'admin/new_certificate.html', {'form': form,
                                                           'certificate': cert})
-

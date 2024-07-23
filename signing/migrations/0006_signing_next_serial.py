@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("signing", "0005_rename_ca_signing_certificate"),
     ]

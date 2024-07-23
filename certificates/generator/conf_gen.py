@@ -1,7 +1,9 @@
 import os
-from signing.models import Signing
-from satella.files import write_to_file, read_in_file, read_re_sub_and_write
+
 from satella.coding import silence_excs
+from satella.files import write_to_file, read_in_file
+
+from signing.models import Signing
 
 
 class ListAppender:
@@ -14,7 +16,7 @@ class ListAppender:
             self.index = lst.index(tag)
 
     def add(self, s: str) -> None:
-        self.lst.insert(self.index+1, s)
+        self.lst.insert(self.index + 1, s)
 
 
 def sane_split(split: str) -> list[str]:
@@ -27,7 +29,7 @@ def sane_split(split: str) -> list[str]:
 def find_in_ssl(ssl: list[str], opt: str) -> int:
     try:
         return ssl.index(opt)
-    except ValueError:      # is not in list
+    except ValueError:  # is not in list
         ssl.append(opt)
         return ssl.index(opt)
 
@@ -41,19 +43,22 @@ def save_database_to_disk(signing: Signing) -> None:
     base_path = os.path.join('/ssl', str(signing.id))
     with open(os.path.join(base_path, 'index.txt'), 'w', encoding='utf-8') as fout:
         for db_entry in signing.signaturedatabase_set.all():
-            fout.write(f'{db_entry.status}\t{db_entry.expiration}\t{db_entry.revocation}\t{db_entry.serial.rjust(16, "0")}\t'
-                       f'unknown\t{db_entry.subject_dn}\n')
+            fout.write(
+                f'{db_entry.status}\t{db_entry.expiration}\t{db_entry.revocation}\t{db_entry.serial.rjust(16, "0")}\t'
+                f'unknown\t{db_entry.subject_dn}\n')
+
 
 @silence_excs(FileExistsError)
 def try_mkdir(dir: str) -> None:
     os.mkdir(dir)
-    
+
 
 def sanitize_kwargs(kwargs: dict) -> dict:
     new_dict = {}
     for key, value in kwargs.items():
         new_dict[key.lower()] = value
     return new_dict
+
 
 def save_to_disk(signing: Signing, **kwargs) -> None:
     base_path = os.path.join('/ssl', str(signing.id))
@@ -78,9 +83,9 @@ def save_to_disk(signing: Signing, **kwargs) -> None:
 def get_current_serial(signing: Signing) -> str:
     return read_in_file(os.path.join('/ssl', str(signing.id), 'serial'), encoding='utf-8').rjust(16, '0')
 
-def add_ca_root_smok(openssl: list[str], signing: Signing):
 
-    la = ListAppender(openssl,'[ CA_ROOT_SMOK ]')
+def add_ca_root_smok(openssl: list[str], signing: Signing):
+    la = ListAppender(openssl, '[ CA_ROOT_SMOK ]')
     base_path = os.path.join('/ssl', str(signing.id))
     la.add('certs=$dir/certs')
     la.add('crl_dir=$dir/crl_dir')
@@ -133,4 +138,3 @@ def generate_openssl_configuration(signing: Signing, **kwargs) -> str:
 
     openssl_config = '\n'.join([*openssl, ''])
     return openssl_config
-

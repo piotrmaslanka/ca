@@ -1,17 +1,17 @@
 {% extends 'admin/base_site.html' %}
 {% block title %}
-    CA: Certificate Authority
+CA: Certificate Authority
 {% endblock %}
 {% block content %}
 
-    <h1>New certificate based off {{ certificate.common_name }}</h1>
+<h1>New certificate based off {{ certificate.common_name }}</h1>
 
-    <form action="/admin/certificates/generate/{{ certificate.id }}/" method="POST">
+<form action="/admin/certificates/generate/{{ certificate.id }}/" method="POST">
     {{ form.as_p }}
-        {% csrf_token %}
-        <div class="submit-row">
-            <input type="submit" value="Generate" class="default" name="_save">
-        </div>
-    </form>
+    {% csrf_token %}
+    <div class="submit-row">
+        <input class="default" name="_save" type="submit" value="Generate">
+    </div>
+</form>
 
 {% endblock %}

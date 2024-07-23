@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("certificates", "0005_remove_certificate_current_serial_certificate_serial"),
     ]

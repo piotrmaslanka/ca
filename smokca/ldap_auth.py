@@ -1,9 +1,10 @@
 import json
 import uuid
+
 import ldap3
+from django.conf import settings
 from django.contrib.auth.backends import BaseBackend
 from django.contrib.auth.models import User
-from django.conf import settings
 
 
 class LDAPAuthentication(BaseBackend):
@@ -44,7 +45,7 @@ class LDAPAuthentication(BaseBackend):
 
         ldap_conn = ldap3.Server(settings.LDAP_HOST, get_info=ldap3.ALL)
         conn = ldap3.Connection(ldap_conn, user=settings.LDAP_USERNAME, password=settings.LDAP_PASSWORD,
-                                pool_keepalive = 10, authentication=ldap3.SIMPLE)
+                                pool_keepalive=10, authentication=ldap3.SIMPLE)
         if not conn.bind():
             raise RuntimeError('Could not connect to LDAP')
         conn.search(search_base=settings.LDAP_GROUP, search_filter='(objectClass=groupOfNames)',

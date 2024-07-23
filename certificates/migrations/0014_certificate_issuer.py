@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("certificates", "0013_certificate_extra_data"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),

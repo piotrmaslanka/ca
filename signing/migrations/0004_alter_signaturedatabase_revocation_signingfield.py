@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("signing", "0003_alter_signing_openssl_conf_signaturedatabase"),
     ]

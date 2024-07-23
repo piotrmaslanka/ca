@@ -39,7 +39,7 @@ def generate_new(request, certificate_id: int):
             for field in signing.signingfield_set.all():
                 kwargs[field.name.lower()] = form.cleaned_data[field.name.lower()]
 
-            new_cert = new_certificate(cert, country=form.cleaned_data['c'],
+            new_cert = new_certificate(cert, request.user, country=form.cleaned_data['c'],
                             organisation=form.cleaned_data['o'], org_unit=form.cleaned_data['ou'],
                             common_name=form.cleaned_data['cn'], **kwargs)
             messages.add_message(request, messages.SUCCESS, 'New certificate issued')

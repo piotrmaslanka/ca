@@ -21,15 +21,15 @@ class SignatureDatabaseAdmin(admin.TabularInline):
 
 class CertificateAdmin(admin.ModelAdmin):
     actions = ['generate_new']
-    readonly_fields = ['serial', 'signed_by', 'extra_data']
+    readonly_fields = ['serial', 'signed_by', 'extra_data', 'issuer']
     fields = ['public_key', 'private_key', 'is_used_for_client_auth', 'is_ca', 'can_sign',
-              'common_name', 'signed_by', 'serial', 'extra_data']
+              'common_name', 'signed_by', 'serial', 'extra_data', 'issuer']
     list_display = ['common_name', 'serial', 'can_sign']
     inlines = [SignatureDatabaseAdmin]
 
     @admin.action
     def generate_new(modeladmin, request, queryset):
-        if len(queryset) != 1:
+        if queryset.count() != 1:
             messages.add_message(request, messages.ERROR, 'Can select at most one certificate!')
             return redirect('/admin/certificates/certificate/')
         cert, = queryset

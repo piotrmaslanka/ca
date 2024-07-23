@@ -1,14 +1,19 @@
-import os
 import json
-import sys
+import os
 import subprocess
+import sys
 from datetime import datetime
+from django.contrib.auth.models import User
+from satella.files import read_re_sub_and_write, read_in_file
+
 from certificates.models import Certificate
 from signing.models import Signing, SignatureDatabase
-from satella.files import read_re_sub_and_write, read_in_file
 from .conf_gen import save_to_disk, get_current_serial
 
-def new_certificate(signed_by: Certificate, key_size: int = 4096, days=365, country: str = 'PL', organisation: str = 'SMOK sp. z o. o.', org_unit='Production', common_name: str = 'CN', **kwargs) -> Certificate:
+
+def new_certificate(signed_by: Certificate, issuer: User, key_size: int = 4096, days=365, country: str = 'PL',
+                    organisation: str = 'SMOK sp. z o. o.', org_unit='Production', common_name: str = 'CN',
+                    **kwargs) -> Certificate:
     """
     Create a new certificate
 
@@ -32,23 +37,26 @@ def new_certificate(signed_by: Certificate, key_size: int = 4096, days=365, coun
     subject_dn = f'/C={country}/O={organisation}/OU={org_unit}/CN={common_name}'
 
     rc = subprocess.Popen(['openssl', 'genrsa', '-out', f'/ssl/{sign.id}/cert.key', str(key_size)],
-                     stdout=sys.stdout, stderr=sys.stdout)
+                          stdout=sys.stdout, stderr=sys.stdout)
     rc.wait()
     if rc.returncode:
         raise RuntimeError('failed')
-    rc = subprocess.Popen(['openssl', 'req', '-new', '-key', f"/ssl/{sign.id}/cert.key", '-out', f'/ssl/{sign.id}/cert.csr', '-config', f'/ssl/{sign.id}/openssl.conf',
-                      '-subj', subject_dn],
-                     stdout=sys.stdout, stderr=sys.stdout)
-    rc.wait()
-    if rc.returncode:
-        raise RuntimeError('failed')
-
-    rc = subprocess.Popen(['openssl', 'ca', '-batch', '-extensions', 'dev_cert', '-config', f'/ssl/{sign.id}/openssl.conf', '-in', f'/ssl/{sign.id}/cert.csr'],
-                     stdout=sys.stdout, stderr=sys.stdout)
+    rc = subprocess.Popen(
+        ['openssl', 'req', '-new', '-key', f"/ssl/{sign.id}/cert.key", '-out', f'/ssl/{sign.id}/cert.csr', '-config',
+         f'/ssl/{sign.id}/openssl.conf',
+         '-subj', subject_dn],
+        stdout=sys.stdout, stderr=sys.stdout)
     rc.wait()
     if rc.returncode:
         raise RuntimeError('failed')
 
+    rc = subprocess.Popen(
+        ['openssl', 'ca', '-batch', '-extensions', 'dev_cert', '-config', f'/ssl/{sign.id}/openssl.conf', '-in',
+         f'/ssl/{sign.id}/cert.csr'],
+        stdout=sys.stdout, stderr=sys.stdout)
+    rc.wait()
+    if rc.returncode:
+        raise RuntimeError('failed')
 
     # Find our new cert
     cert_name = os.listdir(os.path.join(base_path, 'newcerts'))[0]
@@ -69,7 +77,6 @@ def new_certificate(signed_by: Certificate, key_size: int = 4096, days=365, coun
     prev_serial = sign.next_serial
     sign.next_serial = get_current_serial(sign)
     sign.save()
-
 
     db_entry = SignatureDatabase(signing=sign, status='V', expiration=expiration, serial=prev_serial,
                                  subject_dn=subject_dn, certificate=cert, signed_by=signed_by)
